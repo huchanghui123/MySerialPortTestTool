@@ -1,0 +1,11 @@
+E:\Visual Studio\C#\MySerialPort\MySerialPort\bin\Release\MySerialPort.exe.config
+E:\Visual Studio\C#\MySerialPort\MySerialPort\bin\Release\MySerialPort.exe
+E:\Visual Studio\C#\MySerialPort\MySerialPort\bin\Release\MySerialPort.pdb
+E:\Visual Studio\C#\MySerialPort\MySerialPort\obj\Release\MySerialPort.csprojAssemblyReference.cache
+E:\Visual Studio\C#\MySerialPort\MySerialPort\obj\Release\MySerialPort.Form1.resources
+E:\Visual Studio\C#\MySerialPort\MySerialPort\obj\Release\MySerialPort.Form2.resources
+E:\Visual Studio\C#\MySerialPort\MySerialPort\obj\Release\MySerialPort.Properties.Resources.resources
+E:\Visual Studio\C#\MySerialPort\MySerialPort\obj\Release\MySerialPort.csproj.GenerateResource.cache
+E:\Visual Studio\C#\MySerialPort\MySerialPort\obj\Release\MySerialPort.csproj.CoreCompileInputs.cache
+E:\Visual Studio\C#\MySerialPort\MySerialPort\obj\Release\MySerialPort.exe
+E:\Visual Studio\C#\MySerialPort\MySerialPort\obj\Release\MySerialPort.pdb
