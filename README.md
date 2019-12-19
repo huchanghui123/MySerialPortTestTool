@@ -5,5 +5,4 @@
 
 开发环境：Windows10 Visual Studio 2017
 
-
 ![my_serial_port_test_tool](./my_serial_port_test_tool.png)
