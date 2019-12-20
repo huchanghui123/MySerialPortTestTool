@@ -75,8 +75,8 @@ namespace MySerialPort
                     comboBox4.Enabled = true;
                     comboBox5.Enabled = true;
                     comboBox6.Enabled = true;
-                    checkBox4.Checked = false;
-                    checkBox4.Enabled = false;
+                    auto_send_checkbox.Checked = false;
+                    auto_send_checkbox.Enabled = false;
                     //textBox_receive.Text = "";
                     //textBox_send.Text = "";
                     rts_check.Enabled = true;
@@ -100,7 +100,7 @@ namespace MySerialPort
                     comboBox4.Enabled = false;
                     comboBox5.Enabled = false;
                     comboBox6.Enabled = false;
-                    checkBox4.Enabled = true;
+                    auto_send_checkbox.Enabled = true;
                     serialPort1.PortName = comboBox1.Text;
                     serialPort1.BaudRate = int.Parse(comboBox2.Text);
                     serialPort1.DataBits = int.Parse(comboBox3.Text.ToUpperInvariant());
@@ -173,8 +173,8 @@ namespace MySerialPort
                 comboBox4.Enabled = true;
                 comboBox5.Enabled = true;
                 comboBox6.Enabled = true;
-                checkBox4.Checked = false;
-                checkBox4.Enabled = false;
+                auto_send_checkbox.Checked = false;
+                auto_send_checkbox.Enabled = false;
             }
         }
 
@@ -254,7 +254,7 @@ namespace MySerialPort
             {
                 int num = indata.Length;
                 receive_count += num;
-                //Console.WriteLine("-------" + indata + " num:" + num);
+                //Console.WriteLine("recevied:" + indata + " num:" + num);
                 if (stringComparer.Equals("reboot", indata))
                 {
                     //1s 后重启计算机
@@ -270,7 +270,7 @@ namespace MySerialPort
                     try
                     {
                         Invoke((EventHandler)(delegate {
-                            checkBox4.Checked = false;
+                            auto_send_checkbox.Checked = false;
                         }));
                     }
                     catch (Exception ex)
@@ -284,7 +284,7 @@ namespace MySerialPort
                     try
                     {
                         Invoke((EventHandler)(delegate {
-                            checkBox4.Checked = true;
+                            auto_send_checkbox.Checked = true;
                         }));
                     }
                     catch (Exception ex)
@@ -344,7 +344,7 @@ namespace MySerialPort
 
         private void AutoSend_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox4.Checked)
+            if (auto_send_checkbox.Checked)
             {
                 //自动发送开始
                 numericUpDown1.Enabled = false;
@@ -378,14 +378,7 @@ namespace MySerialPort
         //获取系统开机时间
         private DateTime GetComputerStartTime()
         {
-            int result = Environment.TickCount & Int32.MaxValue;     //获取系统启动后运行的毫秒数
-            TimeSpan m_WorkTimeTemp = new TimeSpan(Convert.ToInt64(Convert.ToInt64(result) * 10000));
-
-            DateTime startTime = System.DateTime.Now.AddDays(m_WorkTimeTemp.Days);
-            startTime = startTime.AddHours(-m_WorkTimeTemp.Hours);
-            startTime = startTime.AddMinutes(-m_WorkTimeTemp.Minutes);
-            startTime = startTime.AddSeconds(-m_WorkTimeTemp.Seconds);
-            //Console.WriteLine("GetComputerStartTime:"+ startTime.ToString());
+            DateTime startTime = DateTime.Now.AddMilliseconds(-Environment.TickCount);
             return startTime;
         }
 

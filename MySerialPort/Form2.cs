@@ -14,7 +14,7 @@ namespace MySerialPort
     {
         private String[] sps = null;
         private int serialCount = 1;
-        private int defaultWidth = 300;
+        private int defaultWidth = 240;
         private int defaultHeight = 300;
         
         private int panelX = 10;
@@ -41,14 +41,14 @@ namespace MySerialPort
             serialCount = sps.Length;
             int count = 0;
             int formWidth = 0;
-            int formHeight = 380;
-            //多于3个串口，高度翻倍，比如有5串，上3下2
-            if (serialCount > 3)
+            int formHeight = 360;
+
+            if (serialCount > 1)
             {
                 formHeight += 360;
-                count = serialCount - 3;
+                count = (int)Math.Ceiling((decimal)serialCount/2);
             }
-            for (int i = 0;i < serialCount - count; i++)
+            for (int i = 0;i < count; i++)
             {
                 formWidth += defaultWidth;
             }
@@ -83,7 +83,7 @@ namespace MySerialPort
                 Font = new System.Drawing.Font("宋体", 10F),
                 Multiline = true,
                 ScrollBars = System.Windows.Forms.ScrollBars.Vertical,
-                Size = new System.Drawing.Size(defaultWidth - 20, defaultWidth - 25),
+                Size = new System.Drawing.Size(defaultWidth - 20, defaultHeight-20),
                 Name = "recevie"
             };
             textBox.Location = new System.Drawing.Point(0, 20);
@@ -98,24 +98,25 @@ namespace MySerialPort
                 BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
             };
             Label label = null;
+            panel.Name = sps[i-1];
+            label = CreateRecevideLabel(panel.Name);
+            int index = 0;
+            //上排
             if (type == 1)
             {
-                panel.Name = sps[i + 3];
-                label = CreateRecevideLabel(sps[i + 3]);
-                panelY += 340;
-                panel.TabIndex = i + 3;
+                index = (int)Math.Floor((decimal)i / 2);//向下取整，1、3、5、7、9——>0、1、2、3、4
             }
+            //下排
             else
             {
-                panel.Name = sps[i];
-                label = CreateRecevideLabel(sps[i]);
-                panel.TabIndex = i;
+                panelY += 335;
+                index = (i - 2) / 2;//2、4、6、8、10——>0、1、2、3、4
             }
-            
-            //Label label = CreateRecevideLabel(sps[i + 3]);
+            panel.TabIndex = i-1;
+
             TextBox textBox = CreateRecevideTextBox();
 
-            panelX = i * defaultWidth == 0 ? 10 : i * defaultWidth;
+            panelX = index * defaultWidth == 0 ? 10 : index * defaultWidth;
             
             panel.Location = new System.Drawing.Point(panelX, panelY);
             panel.Size = new System.Drawing.Size(defaultWidth - 20, defaultHeight);
@@ -123,7 +124,6 @@ namespace MySerialPort
             panel.Controls.Add(label);
             panel.Controls.Add(textBox);
             
-
             return panel;
         }
 
@@ -131,32 +131,22 @@ namespace MySerialPort
         private void CreateReceivePanelList()
         {
             recevie_panel_list.Clear();
-            int Xcount = 0;
-            int Ycount = 0;
 
-            if (serialCount > 3)
+            bool isodd = true;
+            for(int i=1;i<= serialCount;i++)
             {
-                Xcount = 3;
-                Ycount = serialCount - 3;
-            }
-            else
-            {
-                Xcount = serialCount;
-            }
-
-            //X轴
-            for (int i = 0; i < Xcount; i++)
-            {
-                Panel panel = CreateReceivePanel(i, 0);
-
-                recevie_panel_list.Add(panel);
-            }
-            //Y轴
-            for (int i = 0; i < Ycount; i++)
-            {
-                Panel panel = CreateReceivePanel(i, 1);
-
-                recevie_panel_list.Add(panel);
+                isodd = IsOdd(i);
+                //奇数 上排
+                if (isodd)
+                {
+                    Panel panel = CreateReceivePanel(i, 1);
+                    recevie_panel_list.Add(panel);
+                }
+                //偶数 下排
+                else {
+                    Panel panel = CreateReceivePanel(i, 0);
+                    recevie_panel_list.Add(panel);
+                }
             }
 
             foreach (Panel panel in recevie_panel_list)
@@ -204,26 +194,29 @@ namespace MySerialPort
             {
                 BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
             };
+            panel.Name = sps[i-1] + "_State";
+            int index = 0;
             if (type == 1)
             {
-                panel.Name = sps[i + 3] + "_State";
-                statePanelY += 350;
+                
                 panel.TabIndex = i + 3;
+                index = (int)Math.Floor((decimal)i / 2);
             }
             else
             {
-                panel.Name = sps[i] + "_State";
-                panel.TabIndex = i;
+                statePanelY += 335;
+                index = (i - 2) / 2;
             }
+            panel.TabIndex = i - 1;
 
             Label label = CreateStateLabel();
-            Label label_CTS = CreateStateSignalLabel(120, "CTS");
-            Label label_DSR = CreateStateSignalLabel(160, "DSR");
-            Label label_DCD = CreateStateSignalLabel(200, "DCD");
+            Label label_CTS = CreateStateSignalLabel(100, "CTS");
+            Label label_DSR = CreateStateSignalLabel(140, "DSR");
+            Label label_DCD = CreateStateSignalLabel(180, "DCD");
 
-            statePanelX = i * defaultWidth == 0 ? 10 : i * defaultWidth;
+            statePanelX = index * defaultWidth == 0 ? 10 : index * defaultWidth;
             panel.Location = new System.Drawing.Point(statePanelX, statePanelY);
-            panel.Size = new System.Drawing.Size(250, 30);
+            panel.Size = new System.Drawing.Size(defaultWidth-20, 30);
 
             panel.Controls.Add(label);
             panel.Controls.Add(label_CTS);
@@ -237,27 +230,23 @@ namespace MySerialPort
         private void CreateStatePanelList()
         {
             state_panel_list.Clear();
-            int Xcount = 0;
-            int Ycount = 0;
-
-            if (serialCount > 3)
+            
+            bool isodd = true;
+            for (int i = 1; i <= serialCount; i++)
             {
-                Xcount = 3;
-                Ycount = serialCount - 3;
-            }
-            else
-            {
-                Xcount = serialCount;
-            }
-            for (int i = 0; i < Xcount; i++)
-            {
-                Panel panel = CreateStatePanel(i, 0);
-                state_panel_list.Add(panel);
-            }
-            for (int i = 0; i < Ycount; i++)
-            {
-                Panel panel = CreateStatePanel(i, 1);
-                state_panel_list.Add(panel);
+                isodd = IsOdd(i);
+                //奇数 上排
+                if (isodd)
+                {
+                    Panel panel = CreateStatePanel(i, 1);
+                    state_panel_list.Add(panel);
+                }
+                //偶数 下排
+                else
+                {
+                    Panel panel = CreateStatePanel(i, 0);
+                    state_panel_list.Add(panel);
+                }
             }
 
             foreach (Panel panel in state_panel_list)
@@ -424,6 +413,11 @@ namespace MySerialPort
                 sp.Close();
             }
             timer1.Stop();
+        }
+
+        private static bool IsOdd(int n)
+        {
+            return Convert.ToBoolean(n % 2);
         }
     }
 }

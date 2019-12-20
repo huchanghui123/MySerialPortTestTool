@@ -66,7 +66,7 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.label10 = new System.Windows.Forms.Label();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
+            this.auto_send_checkbox = new System.Windows.Forms.CheckBox();
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -474,7 +474,7 @@
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel3.Controls.Add(this.label10);
             this.panel3.Controls.Add(this.numericUpDown1);
-            this.panel3.Controls.Add(this.checkBox4);
+            this.panel3.Controls.Add(this.auto_send_checkbox);
             this.panel3.Controls.Add(this.button4);
             this.panel3.Controls.Add(this.button3);
             this.panel3.Location = new System.Drawing.Point(10, 497);
@@ -519,17 +519,17 @@
             0,
             0});
             // 
-            // checkBox4
+            // auto_send_checkbox
             // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Enabled = false;
-            this.checkBox4.Location = new System.Drawing.Point(11, 51);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(72, 16);
-            this.checkBox4.TabIndex = 2;
-            this.checkBox4.Text = "自动发送";
-            this.checkBox4.UseVisualStyleBackColor = true;
-            this.checkBox4.CheckedChanged += new System.EventHandler(this.AutoSend_CheckedChanged);
+            this.auto_send_checkbox.AutoSize = true;
+            this.auto_send_checkbox.Enabled = false;
+            this.auto_send_checkbox.Location = new System.Drawing.Point(11, 51);
+            this.auto_send_checkbox.Name = "auto_send_checkbox";
+            this.auto_send_checkbox.Size = new System.Drawing.Size(72, 16);
+            this.auto_send_checkbox.TabIndex = 2;
+            this.auto_send_checkbox.Text = "自动发送";
+            this.auto_send_checkbox.UseVisualStyleBackColor = true;
+            this.auto_send_checkbox.CheckedChanged += new System.EventHandler(this.AutoSend_CheckedChanged);
             // 
             // button4
             // 
@@ -854,7 +854,7 @@
         private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.CheckBox checkBox4;
+        private System.Windows.Forms.CheckBox auto_send_checkbox;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Timer timer1;
