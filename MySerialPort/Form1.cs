@@ -328,14 +328,14 @@ namespace MySerialPort
             
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void ClearReceivedClick(object sender, EventArgs e)
         {
             textBox_receive.Text = "";  
             receive_count = 0;          
             label_receive.Text = "接收字节：" + receive_count.ToString() + "Bytes";
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void ClearSendClick(object sender, EventArgs e)
         {
             textBox_send.Text = "";
             send_count = 0;
@@ -355,6 +355,7 @@ namespace MySerialPort
                 label10.Text = "自动发送中...";
                 rts_check.Enabled = false;
                 dtr_check.Enabled = false;
+                clear_send_btn.Enabled = false;
             }
             else
             {
@@ -366,6 +367,7 @@ namespace MySerialPort
                 label10.Text = "";
                 rts_check.Enabled = true;
                 dtr_check.Enabled = true;
+                clear_send_btn.Enabled = true;
             }
         }
 
@@ -399,13 +401,13 @@ namespace MySerialPort
 
         private void TestAllSerialPort(object sender, EventArgs e)
         {
-            testAll = new Form2();
+            testAll = new Form2(comboBox2.Text, comboBox3.Text, comboBox4.Text,
+                comboBox5.Text, comboBox6.Text);
             testAll.ShowDialog();
         }
 
         private void Pin_Changed(object sender, SerialPinChangedEventArgs e)
         {
-            //Console.WriteLine("Pin_Changed..............");
             if (serialPort1.CDHolding)
             {
                 dcd_label.BackColor = Color.Green;
@@ -430,6 +432,15 @@ namespace MySerialPort
             {
                 dsr_label.BackColor = Color.LightGray;
             }
+        }
+
+        private void Form1_Closed(object sender, FormClosedEventArgs e)
+        {
+            if (serialPort1.IsOpen)
+            {
+                serialPort1.Close();
+            }
+            timer1.Enabled = false;
         }
     }
 }

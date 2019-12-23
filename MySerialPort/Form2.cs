@@ -27,12 +27,26 @@ namespace MySerialPort
         private List<Panel> state_panel_list = new List<Panel>();
         private List<SerialPort> serial_list = new List<SerialPort>();
 
-        public Form2()
+        private int baudRate = 115200;
+        private int dataBits = 8;
+        private String stopBits = "One";
+        private String parity = "None";
+        private String handshake  = "None";
+
+        public Form2(string rate, string dbits, String sbits, String sparity, String shandshake)
         {
             InitializeComponent();
-            //this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Location = new Point(200,20);
+            this.Location = new Point(150,20);
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            //this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+
+            baudRate = int.Parse(rate.ToUpperInvariant());
+            dataBits = int.Parse(dbits.ToUpperInvariant());
+            stopBits = sbits;
+            parity = sparity;
+            handshake = shandshake;
+            Console.WriteLine("BaudRate:"+ baudRate+ " DataBits:"+ dataBits+ " StopBits:"+ stopBits
+                + " Parity:"+ parity + " Handshake:"+ handshake);
         }
 
         private void TestAllLoad(object sender, EventArgs e)
@@ -41,26 +55,47 @@ namespace MySerialPort
             serialCount = sps.Length;
             int count = 0;
             int formWidth = 0;
-            int formHeight = 360;
+            int formHeight = 380;
+            count = (int)Math.Ceiling((decimal)serialCount / 2);
 
             if (serialCount > 1)
             {
                 formHeight += 360;
-                count = (int)Math.Ceiling((decimal)serialCount/2);
+            }
+            else
+            {
+                formHeight = 400;
             }
             for (int i = 0;i < count; i++)
             {
                 formWidth += defaultWidth;
             }
-            Size newSize = new Size(formWidth, formHeight);
+            Size newSize = new Size(formWidth + 20, formHeight);
             this.MaximumSize = this.MinimumSize = newSize;
             this.Size = newSize;
 
+            CreatePortInfo();
             CreateReceivePanelList();
             CreateStatePanelList();
             CreateSerialPort();
             OpenSerialPort();
             timer1.Start();
+        }
+
+        private void CreatePortInfo()
+        {
+            String labeText = "BaudRate:" + baudRate + " DataBits:" + dataBits + " StopBits:" + stopBits
+                + " Parity:" + parity + " Handshake:" + handshake;
+            Label label = new Label
+            {
+                //BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle,
+                AutoSize = true,
+                Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular,
+                    System.Drawing.GraphicsUnit.Point, ((byte)(134))),
+                Text = labeText
+            };
+            label.Location = new System.Drawing.Point(0, 5);
+            this.Controls.Add(label);
         }
 
         private Label CreateRecevideLabel(String label_text)
@@ -92,7 +127,7 @@ namespace MySerialPort
 
         private Panel CreateReceivePanel(int i,int type)
         {
-            panelY = 10;
+            panelY = 25;
             Panel panel = new Panel
             {
                 BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
@@ -116,10 +151,10 @@ namespace MySerialPort
 
             TextBox textBox = CreateRecevideTextBox();
 
-            panelX = index * defaultWidth == 0 ? 10 : index * defaultWidth;
-            
+            panelX = index * defaultWidth == 0 ? 10 : index * defaultWidth + 10;
+            Console.WriteLine("panelX:"+ panelX);
             panel.Location = new System.Drawing.Point(panelX, panelY);
-            panel.Size = new System.Drawing.Size(defaultWidth - 20, defaultHeight);
+            panel.Size = new System.Drawing.Size(defaultWidth - 10, defaultHeight);
 
             panel.Controls.Add(label);
             panel.Controls.Add(textBox);
@@ -189,7 +224,7 @@ namespace MySerialPort
 
         private Panel CreateStatePanel(int i, int type)
         {
-            statePanelY = 310;
+            statePanelY = 325;
             Panel panel = new Panel
             {
                 BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
@@ -214,9 +249,9 @@ namespace MySerialPort
             Label label_DSR = CreateStateSignalLabel(140, "DSR");
             Label label_DCD = CreateStateSignalLabel(180, "DCD");
 
-            statePanelX = index * defaultWidth == 0 ? 10 : index * defaultWidth;
+            statePanelX = index * defaultWidth == 0 ? 10 : index * defaultWidth + 10;
             panel.Location = new System.Drawing.Point(statePanelX, statePanelY);
-            panel.Size = new System.Drawing.Size(defaultWidth-20, 30);
+            panel.Size = new System.Drawing.Size(defaultWidth - 10, 30);
 
             panel.Controls.Add(label);
             panel.Controls.Add(label_CTS);
@@ -253,9 +288,8 @@ namespace MySerialPort
             {
                 this.Controls.Add(panel);
             }
-
         }
-
+        
         private void CreateSerialPort()
         {
             serial_list.Clear();
@@ -263,11 +297,11 @@ namespace MySerialPort
             {
                 SerialPort serialPort = new SerialPort();
                 serialPort.PortName = sps[i];
-                serialPort.BaudRate = 115200;
-                serialPort.DataBits = 8;
-                serialPort.StopBits = StopBits.One;
-                serialPort.Parity = Parity.None;
-                serialPort.Handshake = Handshake.None;
+                serialPort.BaudRate = baudRate;
+                serialPort.DataBits = dataBits;
+                serialPort.StopBits = (StopBits)Enum.Parse(typeof(StopBits), stopBits, true);
+                serialPort.Parity = (Parity)Enum.Parse(typeof(Parity), parity, true);
+                serialPort.Handshake = (Handshake)Enum.Parse(typeof(Handshake), handshake, true);
                 serialPort.Encoding = System.Text.Encoding.GetEncoding("GB2312");
 
                 serialPort.ReadTimeout = 500;
@@ -335,7 +369,6 @@ namespace MySerialPort
                 //MessageBox.Show(ex.Message);
                 Console.WriteLine("Received:" + ex.Message.ToString());
             }
-            
             
         }
 
@@ -407,7 +440,6 @@ namespace MySerialPort
         
         private void Form2_Closing(object sender, FormClosingEventArgs e)
         {
-            Console.WriteLine("FormClosing...............");
             foreach (SerialPort sp in serial_list)
             {
                 sp.Close();

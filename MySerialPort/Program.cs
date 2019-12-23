@@ -15,7 +15,12 @@ namespace MySerialPort
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Form1 form = new Form1();
+            form.FormClosed += delegate (Object sender, FormClosedEventArgs e)
+            {
+                Application.Exit();
+            };
+            Application.Run(form);
         }
     }
 }
