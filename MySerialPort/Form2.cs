@@ -348,13 +348,12 @@ namespace MySerialPort
                 message = serialPort.ReadLine();
                 //message = serialPort.ReadExisting();
                 Console.WriteLine(recevieName + " Received data:" + message);
-
+                //sb.Clear();
+                sb.Remove(0, sb.Length);
+                sb.Append(message);
+                //Console.WriteLine("foreach..........." + sb.ToString());
                 foreach (Panel recevie_panel in recevie_panel_list)
                 {
-                    //sb.Clear();
-                    sb.Remove(0, sb.Length);
-                    sb.Append(message);
-
                     if (recevieName.Equals(recevie_panel.Name))
                     {
                         Invoke((EventHandler)(delegate
@@ -380,7 +379,7 @@ namespace MySerialPort
                 try
                 {
                     index = state_panel_list.IndexOf(state_panel);
-                    Console.WriteLine(serial_list[index].PortName + "----------" + serial_list[index].IsOpen);
+                    Console.WriteLine("Timer_Tick:"+ serial_list[index].PortName + " State:" + serial_list[index].IsOpen);
                     if (serial_list[index].IsOpen)
                     {
                         String str = serial_list[index].PortName + "发送中...";
