@@ -428,6 +428,7 @@ namespace MySerialPort
                         }
 
                     }));
+                    System.Threading.Thread.Sleep(10);//避免接收时冲突，每次发送延迟10ms
                 }
                 catch (Exception ex)
                 {
